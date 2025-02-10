@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_IDENTIFIER_LENGTH 63
+
+// List of reserved keywords in C
+const char *keywords[] = {
+    "auto", "break", "case", "char", "const", "continue", "default", "do",
+    "double", "else", "enum", "extern", "float", "for", "goto", "if",
+    "int", "long", "register", "return", "short", "signed", "sizeof", "static",
+    "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while",
+    "NULL", "true", "false"
+};
+
+int isKeyword(const char *identifier) {
+    for (int i = 0; i < sizeof(keywords) / sizeof(keywords[0]); i++) {
+        if (strcmp(identifier, keywords[i]) == 0) {
+            return 1; // It's a keyword
+        }
+    }
+    return 0; // Not a keyword
+}
+
+int isValidIdentifier(const char *identifier) {
+    // Check length
+    if (strlen(identifier) == 0 || strlen(identifier) > MAX_IDENTIFIER_LENGTH) {
+        return 0; // Invalid length
+    }
+
+    // Check first character
+    if (!isalpha(identifier[0]) && identifier[0] != '_') {
+        return 0; // Must start with a letter or underscore
+    }
+
+    // Check subsequent characters
+    for (int i = 1; i < strlen(identifier); i++) {
+        if (!isalnum(identifier[i]) && identifier[i] != '_') {
+            return 0; // Invalid character
+        }
+    }
+
+    // Check if it's a keyword
+    if (isKeyword(identifier)) {
+        return 0; // It's a keyword
+    }
+
+    return 1; // Valid identifier
+}
+
+int main() {
+    char identifier[100];
+
+    printf("Enter an identifier to check: ");
+    scanf("%s", identifier);
+
+    if (isValidIdentifier(identifier)) {
+        printf("'%s' is a valid identifier.\n", identifier);
+    } else {
+        printf("'%s' is not a valid identifier.\n", identifier);
+    }
+
+    return 0;
+}
