@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+#define MAX_LINE_LENGTH 256
+
+// Function to check if a line is a comment
+int isCommentLine(const char *line) {
+    // Check for single-line comment
+    if (strncmp(line, "//", 2) == 0) {
+        return 1; // It's a single-line comment
+    }
+    
+    // Check for multi-line comment
+    if (strstr(line, "/*") != NULL && strstr(line, "*/") != NULL) {
+        return 1; // It's a multi-line comment
+    }
+    
+    return 0; // Not a comment
+}
+
+// Function to process a line and identify comments
+void processLine(const char *line) {
+    if (isCommentLine(line)) {
+        printf("Comment: %s\n", line);
+    } else {
+        printf("Not a comment: %s\n", line);
+    }
+}
+
+int main() {
+    FILE *fp = fopen("input.txt", "r");
+    if (fp == NULL) {
+        fprintf(stderr, "Could not open file\n");
+        return 1;
+    }
+
+    char line[MAX_LINE_LENGTH];
+
+    // Read each line from the file
+    while (fgets(line, sizeof(line), fp)) {
+        // Remove trailing newline character
+        line[strcspn(line, "\n")] = 0;
+        processLine(line);
+    }
+
+    fclose(fp);
+    return 0;
+}
